@@ -9,28 +9,35 @@ import { Recipe } from "./recipe.model";
 export class RecipeService {
   recipesChanged = new Subject<Recipe[]>();
 
-    private recipes: Recipe[] = [
-        new Recipe(
-            'Sandwich', 
-            'A super-tasty Sandwich!', 
-            'https://www.verywellfit.com/thmb/QfHkFxb5HlW7qWK9qjSFRsRH8gA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/turkey-sandwich-09f5e7ad540f4f28994e80bdd9af05db.jpg',
-            [
-                new Ingredient('Bread' , 2),
-                new Ingredient('Onion' , 1)
-            ]
-            ),
-        new Recipe(
-            'Burger', 
-            'What else u need to say?', 
-            'https://www.indianhealthyrecipes.com/wp-content/uploads/2016/02/veg-burger-recipe-1.jpg',
-            [
-                new Ingredient('Buns' , 2),
-                new Ingredient('Cheese' , 1)
-            ]
-            )
-      ];
+    // private recipes: Recipe[] = [
+    //     new Recipe(
+    //         'Sandwich', 
+    //         'A super-tasty Sandwich!', 
+    //         'https://www.verywellfit.com/thmb/QfHkFxb5HlW7qWK9qjSFRsRH8gA=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/turkey-sandwich-09f5e7ad540f4f28994e80bdd9af05db.jpg',
+    //         [
+    //             new Ingredient('Bread' , 2),
+    //             new Ingredient('Onion' , 1)
+    //         ]
+    //         ),
+    //     new Recipe(
+    //         'Burger', 
+    //         'What else u need to say?', 
+    //         'https://www.indianhealthyrecipes.com/wp-content/uploads/2016/02/veg-burger-recipe-1.jpg',
+    //         [
+    //             new Ingredient('Buns' , 2),
+    //             new Ingredient('Cheese' , 1)
+    //         ]
+    //         )
+    //   ];
+
+    private recipes: Recipe[] = [];
 
       constructor(private slService: ShoppingListService) {}
+
+      setRecipes(recipes: Recipe[]) {
+        this.recipes = recipes;
+        this.recipesChanged.next(this.recipes.slice());
+      }
 
       getRecipe() {
         return this.recipes.slice();
@@ -51,6 +58,11 @@ export class RecipeService {
 
       updateRecipe(index: number, newRecipe: Recipe) {
         this.recipes[index] = newRecipe;
+        this.recipesChanged.next(this.recipes.slice());
+      }
+
+      deleteRecipe(index: number) {
+        this.recipes.splice(index,1);
         this.recipesChanged.next(this.recipes.slice());
       }
 }
